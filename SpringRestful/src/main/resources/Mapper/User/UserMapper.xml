@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springRestful.DAO.User.UserDAO">
+
+
+	<!-- UserCommonInfoResultMap -->
+	<resultMap id="UserCommonInfoResultMap" type="com.springRestful.Entity.User.Users">
+		<result column="user_name" property="userName" />
+		<result column="user_role" property="userRole" />
+		<result column="user_email" property="userEmail" />
+		<result column="created_date" property="createdDate" />
+	</resultMap>
+		
+	<!-- UserLoginInfoResultMap -->
+	<resultMap id="UserLoginInfoResultMap" type="com.springRestful.Entity.User.Users">
+		<result column="user_id" property="userId" />
+		<result column="user_password" property="userPassword" />
+		<result column="user_name" property="userName" />
+		<result column="user_email" property="userEmail" />
+	</resultMap>
+		
+	<select id="findUserCommonInfo" resultMap="UserCommonInfoResultMap">
+	  SELECT            
+            user_name,            
+            user_role,
+            IFNULL(user_email, '') AS user_email,
+            DATE_FORMAT(created_date, '%Y-%m-%d %H:%i:%s') AS created_date         
+        FROM
+            Users
+        WHERE 1=1 
+       	 <if test="userNameKeyWord != null and userNameKeyWord != ''">
+           	AND user_name LIKE CONCAT('%', #{userNameKeyWord}, '%')
+       	</if>
+       	 <if test="userRoleKeyWord != null and userRoleKeyWord != ''">
+           	AND user_role LIKE CONCAT('%', #{userRoledKeyWord}, '%')
+       	</if>
+       	 <if test="userEmailKeyWord != null and userEmailKeyWord != ''">
+           	AND user_email LIKE CONCAT('%', #{userEmailKeyWord}, '%')
+       	</if>
+       	 <if test="userCreatedDateKeyWord != null and userCreatedDateKeyWord != ''">
+           	AND create_date LIKE CONCAT('%', #{userCreatedDateKeyWord}, '%')
+       	</if>
+	</select>
+	
+	<select id="findUserIdExist" resultType="java.lang.Boolean">
+		SELECT
+			IFNULL(COUNT(user_id), '0') AS user_id
+		FROM 
+			Users
+		<if test="userIdKeyWord != null and userIdKeyWord != ''">
+           	WHERE user_id =  #{userIdKeyWord} 
+       	</if>	
+	</select>
+	
+	<select id="findUserLoginInfoByID" resultMap="UserLoginInfoResultMap">
+		SELECT
+			user_id,
+			user_password,
+			user_name,
+			user_email,
+			uuid
+		FROM
+			users 		
+        WHERE 
+        	user_id =  #{userIdKeyWord} 
+	</select>
+	
+	<insert id="createUser" parameterType="com.springRestful.Entity.User.Users">
+	    INSERT INTO users (user_name, user_id, user_email, user_password, user_role, uuid)
+	    VALUES (#{userName}, #{userId}, #{userEmail}, #{userPassword}, #{userRole}, #{uuid})
+	</insert>
+</mapper>
