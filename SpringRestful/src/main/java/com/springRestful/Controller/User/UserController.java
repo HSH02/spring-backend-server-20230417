@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springRestful.CustomTypes.CustomResponse;
-import com.springRestful.Entity.User.LoginRequest;
+import com.springRestful.DTO.User.LoginRequest;
 import com.springRestful.Entity.User.Users;
 import com.springRestful.Service.User.UserService;
 
@@ -25,7 +25,7 @@ public class UserController {
     
     @GetMapping("/search")
     public List<Users> getUsers() {
-        return userService.getUsers();
+        return userService.findUsers();
     }
     
     @PostMapping("/signup")

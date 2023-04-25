@@ -11,9 +11,10 @@
 		<result column="created_date" property="createdDate" />
 	</resultMap>
 		
-	<!-- UserLoginInfoResultMap -->
-	<resultMap id="UserLoginInfoResultMap" type="com.springRestful.Entity.User.Users">
+	<!-- UserCredentialsResultMap-->
+	<resultMap id="UserCredentialsResultMap" type="com.springRestful.Entity.User.Users">
 		<result column="user_id" property="userId" />
+		<result column="uuid" property="uuid" />
 		<result column="user_password" property="userPassword" />
 		<result column="user_name" property="userName" />
 		<result column="user_email" property="userEmail" />
@@ -41,7 +42,7 @@
            	AND create_date LIKE CONCAT('%', #{userCreatedDateKeyWord}, '%')
        	</if>
 	</select>
-	
+		
 	<select id="findUserIdExist" resultType="java.lang.Boolean">
 		SELECT
 			IFNULL(COUNT(user_id), '0') AS user_id
@@ -52,21 +53,42 @@
        	</if>	
 	</select>
 	
-	<select id="findUserLoginInfoByID" resultMap="UserLoginInfoResultMap">
+	<select id="findUserCredentialsByIdOrUuid" resultMap="UserCredentialsResultMap">
 		SELECT
 			user_id,
 			user_password,
 			user_name,
 			user_email,
-			uuid
+			uuid			
 		FROM
 			users 		
-        WHERE 
-        	user_id =  #{userIdKeyWord} 
+        WHERE 1=1
+        	<if test="userIdKeyWord != null and userIdKeyWord != ''">
+        AND	user_id =  #{userIdKeyWord} 
+        	</if>
+        	<if test="userUuidKeyWord != null and userUuidKeyWord != ''">
+        AND	uuid =  #{userUuidKeyWord} 
+        	</if>
 	</select>
 	
 	<insert id="createUser" parameterType="com.springRestful.Entity.User.Users">
-	    INSERT INTO users (user_name, user_id, user_email, user_password, user_role, uuid)
-	    VALUES (#{userName}, #{userId}, #{userEmail}, #{userPassword}, #{userRole}, #{uuid})
+	    INSERT INTO
+			users (
+				user_name,
+				user_id,
+				user_email,
+				user_password,
+				user_role,
+				UUID
+			)
+			VALUES
+				(
+					# {userName},
+					# {userId},
+					# {userEmail},
+					# {userPassword},
+					# {userRole},
+					# {UUID}
+				)
 	</insert>
 </mapper>

@@ -7,7 +7,7 @@ import com.springRestful.CustomTypes.CustomResponse;
 import com.springRestful.CustomTypes.JwtUtil;
 import com.springRestful.CustomTypes.UserSearchKeyword;
 import com.springRestful.DAO.User.UserDAO;
-import com.springRestful.Entity.User.LoginRequest;
+import com.springRestful.DTO.User.LoginRequest;
 import com.springRestful.Entity.User.Users;
 
 import java.util.List;
@@ -20,15 +20,15 @@ public class UserService {
     private UserDAO userDAO;
     
     Pattern USER_ID_PATTERN = createPattern("^[a-zA-Z0-9]+$");
-	Pattern USER_NAME_PATTERN = createPattern("^[\uac00-\ud7a3a-zA-Z]+$");
+    Pattern USER_NAME_PATTERN = createPattern("^[\\uac00-\\ud7a3a-zA-Z0-9]+$");
 	Pattern PASSWORD_PATTERN = createPattern("^[a-zA-Z0-9!@#$%^&*()]+$");
 	Pattern EMAIL_PATTERN = createPattern("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     
-    public List<Users> getUsers() {
+    public List<Users>findUsers() {
     	UserSearchKeyword searchKeyword = createEmptySearchKeyword(); 
         return userDAO.findUserCommonInfo(searchKeyword);
     }
-
+        
 	public CustomResponse createUser(Users user) {				
 		String name = user.getUserName();
 		String id = user.getUserId();
@@ -72,11 +72,8 @@ public class UserService {
 	public CustomResponse login(LoginRequest loginRequest) {
 		String id = loginRequest.getId();
 		String password = loginRequest.getPassword();
-				
-		
-		UserSearchKeyword searchKeyword = createEmptySearchKeyword();
-		searchKeyword.setUserIdKeyWord(id);
-		Users user = userDAO.findUserLoginInfoByID(searchKeyword);
+							
+		Users user = findUserCredentialsById(id);
 		
 		if(user == null || !user.getUserPassword().equals(password)){
 			 return new CustomResponse(false, "ID 또는 비밀번호가 잘못되었습니다.");
@@ -86,7 +83,20 @@ public class UserService {
 		
 		return new CustomResponse(true, token);
 	}
-	
+		
+	public Users findUserCredentialsByUuid(String uuid) {
+	    UserSearchKeyword searchKeyword = createEmptySearchKeyword();
+	    searchKeyword.setUserUuidKeyWord(uuid);
+	    return userDAO.findUserCredentialsByIdOrUuid(searchKeyword);
+	}
+
+   
+   public Users findUserCredentialsById(String id) {
+   		UserSearchKeyword searchKeyword = createEmptySearchKeyword();		
+		searchKeyword.setUserIdKeyWord(id);
+		return userDAO.findUserCredentialsByIdOrUuid(searchKeyword);
+   }
+		
 	private UserSearchKeyword createEmptySearchKeyword() {
 		UserSearchKeyword searchKeyword = new UserSearchKeyword();
 		return searchKeyword;

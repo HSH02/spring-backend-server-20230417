@@ -10,7 +10,7 @@ import com.springRestful.Entity.User.Users;
 public interface UserDAO {
      
 	List<Users> findUserCommonInfo(UserSearchKeyword searchKeyword);
-	Users findUserLoginInfoByID(UserSearchKeyword searchKeyword);
+	Users findUserCredentialsByIdOrUuid(UserSearchKeyword searchKeyword);	
 	
 	Boolean findUserIdExist(UserSearchKeyword searchKeyword);
 	

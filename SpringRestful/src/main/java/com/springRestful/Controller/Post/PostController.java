@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springRestful.CustomTypes.CustomResponse;
+import com.springRestful.DTO.Post.GetPostCreateRequest;
 import com.springRestful.Entity.Post.Posts;
 import com.springRestful.Service.Post.PostService;
 
@@ -22,15 +23,17 @@ public class PostController {
 	private PostService postService;
 	
 	
-	@PostMapping("/create-post")
-	public ResponseEntity<CustomResponse> createPost(@RequestBody Posts post){
-		CustomResponse response = postService.createPost(post);
+	@PostMapping("/create")
+	public ResponseEntity<CustomResponse> createPost(@RequestBody GetPostCreateRequest postCreateRequest){
+		postService.createPost(postCreateRequest);
+				
+		CustomResponse response = postService.createPost(postCreateRequest);
 		
 		if(response.isSuccess()) {
 			return ResponseEntity.ok(response);
 		}else {
 			return ResponseEntity.badRequest().body(response);
-		}
+		}		
 	}
 	
 	@GetMapping("/search")

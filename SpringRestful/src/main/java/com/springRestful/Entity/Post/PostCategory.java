@@ -1,13 +1,11 @@
 package com.springRestful.Entity.Post;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 
 @Data
-@ToString
 @Entity
 @Table(name = "post_category")
 public class PostCategory {

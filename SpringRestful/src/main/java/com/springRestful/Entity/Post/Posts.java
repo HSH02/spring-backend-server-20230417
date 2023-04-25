@@ -1,13 +1,11 @@
 package com.springRestful.Entity.Post;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 
 @Data
-@ToString
 @Entity
 @Table(name = "post")
 public class Posts {
@@ -25,6 +23,9 @@ public class Posts {
     @Column(name = "post_content")
     private String postContent;
     
+    @Column(name = "post_type")
+    private String postType;
+    
     @Column(name = "views")
     private String views;
     
@@ -34,7 +35,7 @@ public class Posts {
     @Column(name = "edit_date")
     private String  editDate;
     
-    @Column(name = "delete_date")
-    private String  deleteDate;
+    @Column(name = "deleted_date")
+    private String  deletedDate;
 
 }

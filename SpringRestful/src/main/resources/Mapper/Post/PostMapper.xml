@@ -15,4 +15,61 @@
 			post
 	</select>
 	
+	<insert id="createPost" parameterType="com.springRestful.DTO.Post.PostCreateInfo" useGeneratedKeys="true" keyProperty="postId">
+		INSERT INTO post 
+				(					
+					user_id,
+					user_name,
+					post_type,					
+					title,
+					post_content
+				)
+			VALUES
+				(					
+					#{userId},
+					#{userName},
+					#{postType},
+					#{title},
+					#{content}							
+				);
+	</insert>
+	
+	<select id="getCategoryId" parameterType="String" resultType="int">
+    	SELECT 
+    		category_id 
+    	FROM 
+    		post_category 
+    	WHERE 
+    		category_name = #{categoryName}
+	</select>
+	
+
+	<insert id="createCategoryIfNotExists" parameterType="com.springRestful.DTO.Post.PostCreateCategory">
+	    <![CDATA[
+	        INSERT INTO post_category (category_name) 
+	        SELECT #{categoryName} 
+	        FROM db_root
+	        WHERE NOT EXISTS (SELECT * FROM post_category WHERE category_name = #{categoryName})
+	    ]]>
+	    <selectKey resultType="java.lang.Integer" keyColumn="category_id" keyProperty="categoryId" order="AFTER">
+	        SELECT current_val FROM db_serial WHERE class_name = 'post_category'
+	    </selectKey>
+	</insert>
+
+
+			
+	<insert id="createPostCategoryMap" parameterType="com.springRestful.DTO.Post.PostCreateCategoryMap">
+		INSERT INTO 
+			post_category_map 
+				(			
+					post_id,
+					category_id		
+				)
+		VALUES
+				(
+					#{postId},
+					#{categoryId}
+				)
+	</insert>
+	
 </mapper>

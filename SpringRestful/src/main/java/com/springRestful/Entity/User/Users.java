@@ -1,12 +1,10 @@
 package com.springRestful.Entity.User;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 @Data
-@ToString
 @Entity
 @Table(name = "users")
 public class Users {
